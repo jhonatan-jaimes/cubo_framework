@@ -17,22 +17,22 @@ public abstract class CuboRegistry {
     }
 
     protected void addListRoutes(Class<? extends CuboRoutes>... cr){
-        for (Class<? extends CuboRoutes> c : cr){
-            try {
-              CuboRoutes r = c.getConstructor().newInstance();
-              r.routes();
-              for (CuboHttpMethods m : CuboHttpMethods.values()){
-                listRoutes.get(m).addAll(r.getRoutes().getMethods().get(m));
-              }
-            } catch (Exception e) {
-              System.out.println(e);
-            }
+      for (Class<? extends CuboRoutes> c : cr){
+        try {
+          CuboRoutes r = c.getConstructor().newInstance();
+          r.routes();
+          for (CuboHttpMethods m : CuboHttpMethods.values()){
+            listRoutes.get(m).addAll(r.getRoutes().getMethods().get(m));
+          }
+        } catch (Exception e) {
+          System.out.println(e);
         }
+      }
     }
 
     public abstract void initRoutes();
 
     public HashMap<CuboHttpMethods, List<CuboPathMethods>> getListRoutes(){
-        return listRoutes;
+      return listRoutes;
     }
 }
