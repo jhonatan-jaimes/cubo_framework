@@ -4,8 +4,11 @@ package com.cubo;
 import java.util.HashMap;
 import java.util.List;
 
+import com.cubo.routes.CuboFuncRoutes;
 import com.cubo.routes.CuboRoute;
 import com.cubo.routes.CuboRoutes;
+import com.cubo.security.CuboFuncSecurity;
+import com.cubo.security.CuboSecurity;
 import com.cubo.server.CuboServer;
 import com.cubo.utils.CuboHttpMethods;
 import com.cubo.utils.CuboPathMethods;
@@ -18,6 +21,7 @@ public class CuboApp {
     private int port = CuboVariable.PORT;
     private CuboRegistry cr;
     private CuboRoute routes;
+    private CuboSecurity security;
 
     // Run static para apps grandes
     private static CuboRegistry initCr(Class<? extends CuboRegistry> cr){
@@ -57,16 +61,16 @@ public class CuboApp {
       this.cr = initCr(cr);
     }
 
-    public CuboRoute routes(){
-      return new CuboRoute();
-    }
-
-    public void setRoutes(CuboRoute cr){
-      this.routes = cr;
+    public void setRoutes(CuboFuncRoutes cfr){
+      this.routes = cfr.routes(new CuboRoute());
     }
 
     public void setPort(int port){
       this.port = port;
+    }
+
+    public void setSecurity(CuboFuncSecurity cfs){
+      this.security = cfs.security(new CuboSecurity());
     }
 
     public void run(){

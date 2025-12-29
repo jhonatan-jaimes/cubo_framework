@@ -6,10 +6,17 @@ public class CuboAppTest {
     @Test
     public void appTest(){
         CuboApp app = new CuboApp();
-        var routes = app.routes();
-        routes.get("/hola", () -> "Hola, mundo");
         app.setPort(9000);
-        app.setRoutes(routes);
+        app.setRoutes((routes) -> {
+            routes.get("/adios", () -> "adios");
+            routes.post("/guardar", () -> "Guardado");
+            return routes;
+        });
+        app.setSecurity((security) -> {
+            security.setCors("www.google.com", "www.edsw.com");
+            security.setNumber(9000);
+            return security;
+        });
         app.run();
     }
 }
