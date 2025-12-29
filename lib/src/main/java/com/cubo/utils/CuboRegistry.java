@@ -16,7 +16,7 @@ public abstract class CuboRegistry {
       }
     }
 
-    protected void addListRoutes(Class<? extends CuboRoutes>... cr){
+    protected static void addListRoutes(Class<? extends CuboRoutes>... cr){
       for (Class<? extends CuboRoutes> c : cr){
         try {
           CuboRoutes r = c.getConstructor().newInstance();
@@ -33,6 +33,11 @@ public abstract class CuboRegistry {
     public abstract void initRoutes();
 
     public HashMap<CuboHttpMethods, List<CuboPathMethods>> getListRoutes(){
+      return listRoutes;
+    }
+
+    public static HashMap<CuboHttpMethods, List<CuboPathMethods>> initRoutes(Class<? extends CuboRoutes> ... cr){
+      addListRoutes(cr);
       return listRoutes;
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.cubo.response.CuboResponse;
 import com.cubo.utils.CuboHttpMethods;
+import com.cubo.utils.CuboJson;
 import com.cubo.utils.CuboPathMethods;
 
 public class CuboServer {
@@ -62,11 +63,11 @@ public class CuboServer {
             for (CuboPathMethods pm : list) {
                 if (pm.path().equals(path)) {
     
-                    Object result = pm.func().func(new CuboResponse(), " ");
-                    String body = result.toString();
+                    CuboResponse result = pm.func().func(new CuboResponse(), " ");
+                    String body = CuboJson.toJson(result.getBody());
     
                     out.println("HTTP/1.1 200 OK");
-                    out.println("Content-Type: text/plain");
+                    out.println("Content-Type: application/json; charset=UTF-8");
                     out.println("Content-Length: " + body.length());
                     out.println();
                     out.println(body);

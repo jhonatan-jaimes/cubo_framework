@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.cubo.func.CuboMethodParam;
 import com.cubo.func.CuboMethodSingle;
-import com.cubo.utils.CuboBody;
 import com.cubo.utils.CuboHttpMethods;
 import com.cubo.utils.CuboPathMethods;
 
@@ -26,11 +25,11 @@ public class CuboRoute {
     }
 
     public void get(String path, CuboMethodSingle func){
-        get(path, (res, req) -> { return res.ok().body(new CuboBody(func.func().toString())); });
+        get(path, (res, req) -> res.ok().body(func.func()));
     }
 
     public void post(String path, CuboMethodSingle func){
-        post(path, (res, req) -> { return res.ok().body(new CuboBody("{")); });
+        post(path, (res, req) -> res.ok().body(func.func()));
     }
 
     public void post(String path, CuboMethodParam func){

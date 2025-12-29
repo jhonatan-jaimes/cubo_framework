@@ -1,16 +1,19 @@
 package com.cubo.response;
 
-import java.io.PrintWriter;
-import com.cubo.utils.CuboBody;
 import com.cubo.utils.CuboHttpStatus;
 
 public class CuboResponse {
 
     private CuboHttpStatus status = CuboHttpStatus.OK;
-    private CuboBody body = new CuboBody("");
+    private Object body = new String("");
 
     public CuboResponse ok(){
         this.status = CuboHttpStatus.OK;
+        return this;
+    }
+
+    public CuboResponse created(){
+        this.status = CuboHttpStatus.CREATED;
         return this;
     }
 
@@ -19,26 +22,17 @@ public class CuboResponse {
         return this;
     }
 
-    /*
-    public CuboResponse body(CuboBody body){
+    public CuboResponse body(Object body){
         this.body = body;
         return this;
     }
-     */
 
-    public String body(CuboBody body){
-        this.body = body;
-        return this.body.body();
+    public Object getBody(){
+        return this.body;
     }
 
     // 🔥 CLAVE
-    public void send(PrintWriter out){
-        String content = body.body().toString();
-        out.println("HTTP/1.1 " + status.getValues());
-        out.println("Content-Type: text/plain");
-        out.println("Content-Length: " + content.length());
-        out.println();
-        out.println(content);
-        out.flush();
+    public CuboResponse send(){
+        return this;
     }
 }
