@@ -13,6 +13,6 @@ public enum CuboHttpStatus {
     }
 
     public String getValues(){
-        return this.ss + " " + this.sn;
+        return this.sn + " " + this.ss;
     }
 }

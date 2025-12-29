@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.cubo.func.CuboMethodParam;
 import com.cubo.func.CuboMethodSingle;
+import com.cubo.response.CuboResponse;
 import com.cubo.utils.CuboHttpMethods;
 import com.cubo.utils.CuboPathMethods;
 
@@ -25,6 +26,9 @@ public class CuboRoute {
     }
 
     public void get(String path, CuboMethodSingle func){
+        if (func.func() instanceof CuboResponse cr){
+            get(path, (res, req) -> cr);
+        }
         get(path, (res, req) -> res.ok().body(func.func()));
     }
 

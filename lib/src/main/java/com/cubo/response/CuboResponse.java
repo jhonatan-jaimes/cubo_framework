@@ -27,12 +27,11 @@ public class CuboResponse {
         return this;
     }
 
-    public Object getBody(){
-        return this.body;
+    public CuboHttpStatus getStatus(){
+        return this.status;
     }
 
-    // 🔥 CLAVE
-    public CuboResponse send(){
-        return this;
+    public Object getBody(){
+        return this.body;
     }
 }

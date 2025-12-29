@@ -6,11 +6,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import com.cubo.response.CuboResponse;
 import com.cubo.utils.CuboHttpMethods;
+import com.cubo.utils.CuboHttpStatus;
 import com.cubo.utils.CuboJson;
 import com.cubo.utils.CuboPathMethods;
 
@@ -38,15 +40,12 @@ public class CuboServer {
     }
 
     private void handleClient(Socket client){
-        try (
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(client.getInputStream())
-            );
-            PrintWriter out = new PrintWriter(client.getOutputStream())
-        ) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            PrintWriter out = new PrintWriter(client.getOutputStream())) {
     
             // 1️⃣ Leer request line
             String requestLine = in.readLine();
+
             if (requestLine == null) return;
     
             String[] parts = requestLine.split(" ");
@@ -56,34 +55,44 @@ public class CuboServer {
             // 2️⃣ Consumir headers
             String header;
             while ((header = in.readLine()) != null && !header.isEmpty()) {}
-    
+
             // 3️⃣ Buscar ruta
-            List<CuboPathMethods> list = routes.get(CuboHttpMethods.valueOf(method));
-    
-            for (CuboPathMethods pm : list) {
-                if (pm.path().equals(path)) {
-    
-                    CuboResponse result = pm.func().func(new CuboResponse(), " ");
-                    String body = CuboJson.toJson(result.getBody());
-    
-                    out.println("HTTP/1.1 200 OK");
-                    out.println("Content-Type: application/json; charset=UTF-8");
-                    out.println("Content-Length: " + body.length());
-                    out.println();
-                    out.println(body);
-                    out.flush();
-                    return;
-                }
+            CuboResponse cpm = routes.get(CuboHttpMethods.valueOf(method)).stream()
+                .filter(e -> e.path().equals(path))
+                .findFirst()
+                .map(e -> e.func().func(new CuboResponse(), " "))
+                .get();
+
+            if (cpm != null){
+                String status = cpm.getStatus().getValues();
+                String body = CuboJson.toJson(cpm.getBody());
+                sendResponse(status, body, out);
+                return;
             }
-    
-            // 4️⃣ 404 obligatorio
-            out.println("HTTP/1.1 404 Not Found");
-            out.println("Content-Length: 0");
-            out.println();
-            out.flush();
+
+            // 4. not_found si no encuentra la ruta.
+            sendResponse(CuboHttpStatus.NOT_FOUND.getValues(), "not found", out);
     
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendResponse(String status, String body, PrintWriter out){
+        if (body == " " || body == "" || body == null){
+            out.println("HTTP/1.1 " + status);
+            out.println("Content-Type: application/json; charset=UTF-8");
+            out.println("Content-Length:");
+            out.println();
+            out.println("");
+            out.flush();
+        } else {
+            out.println("HTTP/1.1 " + status);
+            out.println("Content-Type: application/json; charset=UTF-8");
+            out.println("Content-Length: " + body.length());
+            out.println();
+            out.println(body);
+            out.flush();
         }
     }
 
