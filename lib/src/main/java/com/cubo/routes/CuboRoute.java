@@ -21,23 +21,23 @@ public class CuboRoute {
         }
     }
 
-    public void get(String path, CuboMethodParam func){
-        methods.get(CuboHttpMethods.GET).add(new CuboPathMethods(path, func));
+    public void mapGet(String path, CuboMethodParam cmp){
+        methods.get(CuboHttpMethods.GET).add(new CuboPathMethods(path, cmp));
     }
 
-    public void get(String path, CuboMethodSingle func){
-        if (func.func() instanceof CuboResponse cr){
-            get(path, (res, req) -> cr);
+    public void mapGet(String path, CuboMethodSingle cms){
+        if (cms.func() instanceof CuboResponse cr){
+            mapGet(path, (res, req) -> cr);
         }
-        get(path, (res, req) -> res.ok().body(func.func()));
+        mapGet(path, (res, req) -> res.ok().body(cms.func()));
     }
 
-    public void post(String path, CuboMethodSingle func){
-        post(path, (res, req) -> res.ok().body(func.func()));
+    public void mapPost(String path, CuboMethodSingle cms){
+        mapPost(path, (res, req) -> res.ok().body(cms.func()));
     }
 
-    public void post(String path, CuboMethodParam func){
-        methods.get(CuboHttpMethods.POST).add(new CuboPathMethods(path, func));
+    public void mapPost(String path, CuboMethodParam cmp){
+        methods.get(CuboHttpMethods.POST).add(new CuboPathMethods(path, cmp));
     }
 
     public HashMap<CuboHttpMethods, List<CuboPathMethods>> getMethods(){

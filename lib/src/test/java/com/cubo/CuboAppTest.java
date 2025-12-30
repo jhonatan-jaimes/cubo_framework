@@ -8,8 +8,8 @@ public class CuboAppTest {
         CuboApp app = new CuboApp();
         app.setPort(9000);
         app.setRoutes((routes) -> {
-            routes.get("/adios", () -> "adios");
-            routes.post("/guardar", () -> "Guardado");
+            routes.mapGet("/adios", () -> "adios");
+            routes.mapPost("/guardar", () -> "Guardado");
             return routes;
         });
         app.setSecurity((security) -> {
