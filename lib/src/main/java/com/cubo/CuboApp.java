@@ -56,10 +56,13 @@ public class CuboApp {
       });
     }
 
-    // Run para scripts pequeños
     public void setRegistry(Class<? extends CuboRegistry> cr){
       this.cr = initCr(cr);
     }
+
+    //========================================================================================================//
+
+    // Run para scripts pequeños
 
     public void setRoutes(CuboFuncRoutes cfr){
       this.routes = cfr.routes(new CuboRoute());
@@ -74,11 +77,15 @@ public class CuboApp {
     }
 
     public void run(){
-      if (this.routes != null){
+      if (this.routes != null && this.cr == null){
         run(this.port, this.routes);
+      } else if (this.routes == null && this.cr == null){
+        throw new RuntimeException("No se pueden iniciar sin rutas registradas");
       }
       run(this.port, this.cr);
     }
+
+    //========================================================================================================//
 
     // Mapeo de registros en la variable statica
     private static HashMap<CuboHttpMethods, List<CuboPathMethods>> getRoutes(CuboRegistry cr){

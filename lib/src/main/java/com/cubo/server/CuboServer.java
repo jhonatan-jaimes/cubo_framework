@@ -59,7 +59,7 @@ public class CuboServer {
             CuboResponse cpm = routes.get(CuboHttpMethods.valueOf(method)).stream()
                 .filter(e -> e.path().equals(path))
                 .findFirst()
-                .map(e -> e.func().func(new CuboResponse(), " "))
+                .map(e -> e.func().func(new CuboResponse(), e.req()))
                 .get();
 
             if (cpm != null){
